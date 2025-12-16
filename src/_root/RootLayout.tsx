@@ -1,6 +1,11 @@
+import { Outlet } from 'react-router-dom';
+
 const RootLayout = () => {
   return (
-    <div>RootLayout</div>
+    <div>
+      <div>RootLayout</div>
+      <Outlet />
+    </div>
   )
 }
 
