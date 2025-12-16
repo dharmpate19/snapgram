@@ -1,73 +1,59 @@
-# React + TypeScript + Vite
+Project Setup – Snapgram (Social Media App)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Date: 15 December 2025
 
-Currently, two official plugins are available:
+Folder Structure Update
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+While creating the Snapgram social media application, we modified the default React project structure for better organization:
 
-## React Compiler
+The assets folder is moved outside the src directory.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The existing src folder is deleted.
 
-## Expanding the ESLint configuration
+A new src folder is created.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Inside the new src, we create main.js, which serves as the entry point of the application.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Root Creation in main.js
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+In main.js, we create the React root using react-dom/client and attach it to the DOM element with a specific id.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Why the ! (Non-Null Assertion) is Used
+document.getElementById('root')!
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+document.getElementById() can return two possible values:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+an HTMLElement (if the element exists)
+
+null (if the element does not exist)
+
+createRoot() does not accept null as an argument.
+
+Because of this possibility, TypeScript throws an error, assuming the value might be null.
+
+Solution
+
+To inform TypeScript that the element is guaranteed to exist, we use the non-null assertion operator (!).
+
+The ! tells TypeScript:
+
+“This value will not be null at runtime.”
+
+This is safe because the root element (e.g., <div id="root"></div>) is always defined in index.html.
+
+Important Note
+
+The ! operator is TypeScript-only
+
+It has no effect at runtime
+
+It is removed during compilation
+
+Summary
+
+document.getElementById() → HTMLElement | null
+
+createRoot() → requires HTMLElement
+
+! → assures TypeScript that the value is not null
