@@ -1,11 +1,24 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, Navigate } from 'react-router-dom';
 
 const AuthLayout = () => {
+
+  const isAuthenticated = false;
+
+
   return (
-    <div>
-      <div>AuthLayout</div>
-      <Outlet />
-    </div>
+    <>
+    {
+    isAuthenticated ? 
+    <Navigate to='/' replace={true} /> : (
+      <>
+      <section className='flex flex-1 justify-center items-center flex-col py-10'>
+        <Outlet />
+      </section>
+      </>
+    )
+   }
+      
+    </>
   )
 }
 
